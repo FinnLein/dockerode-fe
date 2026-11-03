@@ -18,7 +18,7 @@ const Header = () => {
 
 	return (
 		<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-			<div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+			<div className="container  max-w-7xl p-4 sm:px-6 lg:p-8 mx-auto flex h-16  items-center justify-between">
 
 				<Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
 					<div className="bg-primary/10 p-2 rounded-lg text-primary">

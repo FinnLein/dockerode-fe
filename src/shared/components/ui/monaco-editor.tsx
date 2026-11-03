@@ -1,7 +1,8 @@
 'use client'
 
 import Editor, { OnChange, OnMount } from '@monaco-editor/react'
-import { useState } from 'react'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 
 interface MonacoEditorProps {
 	language: string
@@ -21,6 +22,12 @@ const MonacoEditor = ({
 	className,
 }: MonacoEditorProps) => {
 	const [isEditorReady, setIsEditorReady] = useState(false)
+	const { resolvedTheme } = useTheme()
+	const [mounted, setMounted] = useState(false)
+
+	useEffect(() => {
+		setMounted(true)
+	}, [])
 
 	const handleEditorChange: OnChange = (newValue) => {
 		onChange(newValue ?? '')
@@ -29,6 +36,8 @@ const MonacoEditor = ({
 	const handleEditorDidMount: OnMount = () => {
 		setIsEditorReady(true)
 	}
+
+	const editorTheme = mounted && resolvedTheme === 'light' ? 'light' : 'vs-dark'
 
 	return (
 		<div className={className}>
@@ -39,12 +48,12 @@ const MonacoEditor = ({
 					</div>
 				)}
 				<Editor
-					theme="vs-dark"
+					theme={editorTheme}
 					defaultLanguage={language}
 					value={value}
 					onChange={handleEditorChange}
 					onMount={handleEditorDidMount}
-					loading={<div />} 
+					loading={<div />}
 					height={height}
 					width="100%"
 					options={{
@@ -61,3 +70,4 @@ const MonacoEditor = ({
 }
 
 export { MonacoEditor }
+
