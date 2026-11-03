@@ -10,7 +10,7 @@ const TaskCard = ({ task }: { task: TaskResponseDto }) => {
 			className="group transition-transform duration-200 hover:-translate-y-1"
 		>
 			<Card className="h-full transition-colors hover:border-primary/50 group-hover:shadow-md cursor-pointer">
-				<CardHeader className="flex flex-row items-center justify-between pb-2">
+				<CardHeader className="flex flex-row  justify-between pb-2">
 					<CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors">
 						Задача {task.title}
 					</CardTitle>
