@@ -1,7 +1,7 @@
-import { MonacoEditor } from '@/app/Editor';
+import { MainPage } from '@/src/views/MainPage/MainPage';
 
 export default function Page() {
   return (
-    <MonacoEditor />
+    <MainPage />
   )
 }

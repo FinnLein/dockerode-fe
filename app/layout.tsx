@@ -1,6 +1,6 @@
 import { Geist_Mono, Inter } from 'next/font/google'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/src/shared/lib/utils'
 import './globals.css'
 import { Providers } from './providers/Providers'
 
@@ -24,7 +24,7 @@ export default function RootLayout({
     >
       <body className="min-h-dvh bg-background text-foreground">
         <Providers>
-          <div className="mx-auto w-full max-w-7xl p-4 sm:px-6 lg:p-8">
+          <div className="container mx-auto w-full max-w-7xl p-4 sm:px-6 lg:p-8">
             {children}
           </div>
         </Providers>
