@@ -1,7 +1,7 @@
-import { Home } from 'lucide-react'
-import Link from 'next/link'
+import { Home } from "lucide-react"
+import Link from "next/link"
 
-import { Text } from '@/src/shared/components/ui/text'
+import { Text } from "@/src/shared/components/ui/text"
 
 const HeaderLogo = () => {
   return (
@@ -12,11 +12,7 @@ const HeaderLogo = () => {
       <div className="rounded-lg bg-primary/10 p-2 text-primary">
         <Home />
       </div>
-      <Text
-        as="span"
-        weight="bold"
-        className="hidden text-lg sm:inline-block"
-      >
+      <Text as="span" weight="bold" className="hidden text-lg sm:inline-block">
         Dockerode Tasks
       </Text>
     </Link>

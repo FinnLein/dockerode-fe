@@ -5,7 +5,7 @@ import { cn } from "cn"
 import * as React from "react"
 
 import { XIcon } from "lucide-react"
-import { Button } from './button'
+import { Button } from "./button"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -70,8 +70,7 @@ function DialogContent({
               />
             }
           >
-            <XIcon
-            />
+            <XIcon />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
@@ -153,6 +152,5 @@ export {
   DialogOverlay,
   DialogPortal,
   DialogTitle,
-  DialogTrigger
+  DialogTrigger,
 }
-
