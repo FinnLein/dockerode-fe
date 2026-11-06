@@ -1,10 +1,9 @@
-'use client'
+"use client"
 
-import { LogIn, LogOut, Shield, User } from 'lucide-react'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { LogIn, LogOut, Shield, User } from "lucide-react"
+import Link from "next/link"
 
-import { Button } from '@/src/shared/components/ui/button'
+import { Button } from "@/src/shared/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,18 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from '@/src/shared/components/ui/dropdown-menu'
-import { Text } from '@/src/shared/components/ui/text'
+} from "@/src/shared/components/ui/dropdown-menu"
+import { Text } from "@/src/shared/components/ui/text"
+import { useMounted } from "@/src/shared/hooks/useMounted"
 
 const UserMenu = () => {
   const isAuth = false
   const isAdmin = false
 
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useMounted()
 
   if (!mounted) {
     return <Button size="xl" variant="ghost" disabled aria-hidden />
@@ -52,9 +48,9 @@ const UserMenu = () => {
               <User />
             </div>
             <div className="flex flex-col">
-              <Text weight="medium">{isAuth ? 'Пользователь' : 'Гость'}</Text>
+              <Text weight="medium">{isAuth ? "Пользователь" : "Гость"}</Text>
               <Text variant="muted">
-                {isAuth ? 'авторизован' : 'не авторизован'}
+                {isAuth ? "авторизован" : "не авторизован"}
               </Text>
             </div>
           </DropdownMenuLabel>
@@ -91,7 +87,7 @@ const UserMenu = () => {
               variant="destructive"
               onClick={() => {
                 // логика выхода
-                console.log('logout')
+                console.log("logout")
               }}
             >
               <LogOut />

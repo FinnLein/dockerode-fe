@@ -1,11 +1,11 @@
-import { TaskPage } from '@/src/views/TaskPage/TaskPage'
+import { TaskPage } from "@/src/views/TaskPage/TaskPage"
 
 export default async function Page({
-	params,
+  params,
 }: {
-	params: Promise<{ id: string }>
+  params: Promise<{ id: string }>
 }) {
-	const { id } = await params
+  const { id } = await params
 
-	return <TaskPage id={id} />
+  return <TaskPage id={id} />
 }

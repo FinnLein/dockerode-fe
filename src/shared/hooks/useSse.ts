@@ -1,49 +1,73 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from "react"
 
 interface UseSseArgs<T> {
-	url: string | null
-	parse?: (raw: string) => T
+  url: string | null
+  parse?: (raw: string) => T
 }
 
-const useSse = <T = string>(args: UseSseArgs<T>) => {
-	const { url, parse } = args
+interface SseState<T> {
+  isConnected: boolean
+  messages: T[]
+  url: string | null
+}
 
-	const [messages, setMessages] = useState<T[]>([])
-	const [isConnected, setIsConnected] = useState(false)
+type UseSseResult<T> = Omit<SseState<T>, "url">
 
-	useEffect(() => {
-		if (!url) return
+const empty = <T>(url: string | null): SseState<T> => ({
+  url,
+  messages: [],
+  isConnected: false,
+})
 
-		setMessages([])
-		setIsConnected(false)
+const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
+  const { url, parse } = args
 
-		const eventSource = new EventSource(url)
+  const [state, setState] = useState<SseState<T>>(() => empty<T>(null))
 
-		eventSource.onopen = () => setIsConnected(true)
+  const parseRef = useRef(parse)
+  useEffect(() => {
+    parseRef.current = parse
+  })
 
-		eventSource.onmessage = (event) => {
-			const value = parse ? parse(event.data) : (event.data as unknown as T)
-			setMessages(prev => [...prev, value])
-		}
+  useEffect(() => {
+    if (!url) return
 
-		eventSource.addEventListener('ping', (event) => {
-			console.log('Ping received:', JSON.parse(event.data));
-		})
+    const base = (prev: SseState<T>) =>
+      prev.url === url ? prev : empty<T>(url)
 
-		eventSource.onerror = (err) => {
-			console.error('SSE Error:', err);
-			setIsConnected(false)
-		};
+    const eventSource = new EventSource(url)
 
-		return () => {
-			eventSource.close()
-		}
-	}, [url])
+    eventSource.onopen = () =>
+      setState((prev) => ({ ...base(prev), isConnected: true }))
 
-	return { messages, isConnected }
+    eventSource.onmessage = (event) => {
+      const fn = parseRef.current
+      const value = fn ? fn(event.data) : (event.data as unknown as T)
+      setState((prev) => {
+        const b = base(prev)
+        return { ...b, messages: [...b.messages, value] }
+      })
+    }
+
+    eventSource.addEventListener("ping", (event) => {
+      console.log("Ping received:", JSON.parse(event.data))
+    })
+
+    eventSource.onerror = (err) => {
+      console.error("SSE Error:", err)
+      setState((prev) => ({ ...base(prev), isConnected: false }))
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }, [url])
+
+  return state.url === url
+    ? { messages: state.messages, isConnected: state.isConnected }
+    : { messages: [] as T[], isConnected: false }
 }
 
 export { useSse }
-

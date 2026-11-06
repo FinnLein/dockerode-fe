@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { Text } from '@/src/shared/components/ui/text'
+import { Text } from "@/src/shared/components/ui/text"
 
 interface TaskTestResultProps {
   index: number
@@ -10,17 +10,17 @@ interface TaskTestResultProps {
 
 const TaskTestResult = ({ index, success, stderr }: TaskTestResultProps) => {
   return (
-    <div className="rounded-md p-4 bg-muted/50">
-      <div className="flex justify-between items-center mb-2">
+    <div className="rounded-md bg-muted/50 p-4">
+      <div className="mb-2 flex items-center justify-between">
         <Text as="span" weight="semibold">
           Тест {index + 1}
         </Text>
-        <Text as="span" variant={success ? 'success' : 'destructive'}>
-          {success ? 'Успешно' : 'Провалено'}
+        <Text as="span" variant={success ? "success" : "destructive"}>
+          {success ? "Успешно" : "Провалено"}
         </Text>
       </div>
       {stderr && (
-        <pre className="text-xs bg-black text-red-400 p-2 rounded overflow-x-auto whitespace-pre-wrap font-mono mt-2 max-h-75 overflow-y-auto">
+        <pre className="mt-2 max-h-75 overflow-x-auto overflow-y-auto rounded bg-black p-2 font-mono text-xs whitespace-pre-wrap text-red-400">
           {stderr}
         </pre>
       )}

@@ -1,0 +1,19 @@
+name: 'Setup Node + pnpm + generate openapi types'
+description: 'Setup node, install deps'
+
+runs: 
+  using: 'composite'
+  steps: 
+    - run: corepack enable pnpm
+      shell: bash
+
+    - uses: actions/setup-node@v4
+      with: 
+        node-version-file: '.nvmrc'
+        cache: 'pnpm'
+
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+
+    - run: pnpm gen:api
+      shell: bash

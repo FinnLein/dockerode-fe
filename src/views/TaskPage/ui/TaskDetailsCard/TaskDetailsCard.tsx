@@ -1,9 +1,14 @@
-'use client'
+"use client"
 
-import { Badge } from '@/src/shared/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/src/shared/components/ui/card'
-import { TaskProcessing } from '../TaskProcessing/TaskProcessing'
-import { TaskTestList } from '../TaskTestList/TaskTestList'
+import { Badge } from "@/src/shared/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/src/shared/components/ui/card"
+import { TaskProcessing } from "../TaskProcessing/TaskProcessing"
+import { TaskTestList } from "../TaskTestList/TaskTestList"
 
 interface TaskDetailsCardProps {
   title: string
@@ -23,7 +28,7 @@ const TaskDetailsCard = ({
   return (
     <Card className="w-full overflow-y-auto md:w-1/2">
       <CardHeader className="flex gap-2">
-        <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors">
+        <CardTitle className="text-lg font-semibold transition-colors group-hover:text-primary">
           Задача {title}
         </CardTitle>
         <Badge variant="secondary">{language}</Badge>

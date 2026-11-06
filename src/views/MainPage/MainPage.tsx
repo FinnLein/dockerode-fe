@@ -1,9 +1,9 @@
-'use client'
+"use client"
 
-import { useTasks } from '@/src/entities/tasks/model/hooks/use-tasks'
-import { Skeleton } from '@/src/shared/components/ui/skeleton'
-import { Text } from '@/src/shared/components/ui/text'
-import { TaskCard } from './ui/TaskCard'
+import { useTasks } from "@/src/entities/tasks/model/hooks/use-tasks"
+import { Skeleton } from "@/src/shared/components/ui/skeleton"
+import { Text } from "@/src/shared/components/ui/text"
+import { TaskCard } from "./ui/TaskCard"
 
 const MainPage = () => {
   const { data: tasks, isLoading, isError } = useTasks()
@@ -18,7 +18,7 @@ const MainPage = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <Text as="h1">Каталог задач</Text>
       </div>
 
@@ -29,7 +29,7 @@ const MainPage = () => {
           ))}
         </div>
       ) : tasks?.length === 0 ? (
-        <Text as="span" variant="muted" className="text-center py-20">
+        <Text as="span" variant="muted" className="py-20 text-center">
           Задач пока нет. Создайте первую!
         </Text>
       ) : (
@@ -44,4 +44,3 @@ const MainPage = () => {
 }
 
 export { MainPage }
-
