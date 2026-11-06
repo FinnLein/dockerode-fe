@@ -12,9 +12,7 @@ import { Input } from "@/src/shared/components/ui/input"
 import { Label } from "@/src/shared/components/ui/label"
 import { Textarea } from "@/src/shared/components/ui/textarea"
 import { useState } from "react"
-import { parseTestCases } from '../model/lib/parseTestCases'
-
-
+import { parseTestCases } from "../model/lib/parseTestCases"
 
 const CreateTaskDialog = () => {
   const [open, setOpen] = useState(false)
@@ -120,7 +118,7 @@ const CreateTaskDialog = () => {
               required
             />
             {parseError && (
-              <p className="text-sm text-destructive mt-1">{parseError}</p>
+              <p className="mt-1 text-sm text-destructive">{parseError}</p>
             )}
           </div>
 

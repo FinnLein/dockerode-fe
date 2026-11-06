@@ -1,4 +1,4 @@
-name: 'Setup Node + pnpm'
+name: 'Setup Node + pnpm + generate openapi types'
 description: 'Setup node, install deps'
 
 runs: 
@@ -13,4 +13,7 @@ runs:
         cache: 'pnpm'
 
     - run: pnpm install --frozen-lockfile
+      shell: bash
+
+    - run: pnpm gen:api
       shell: bash
