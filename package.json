@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "gen:api": "openapi-ts -i http://localhost:5000/api-json -o ./generated/types"
+    "gen:api": "openapi-ts -i ./openapi/openapi.json -o ./generated/types",
+    "gen:api:pull": "node ./scripts/pull-api.mjs && pnpm gen:api"
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
