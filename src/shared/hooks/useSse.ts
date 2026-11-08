@@ -51,6 +51,11 @@ const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
       })
     }
 
+    eventSource.addEventListener("done", () => {
+      eventSource.close()
+      setState((prev) => ({ ...base(prev), isConnected: false }))
+    })
+
     eventSource.addEventListener("ping", (event) => {
       console.log("Ping received:", JSON.parse(event.data))
     })
@@ -58,6 +63,8 @@ const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
     eventSource.onerror = (err) => {
       console.error("SSE Error:", err)
       setState((prev) => ({ ...base(prev), isConnected: false }))
+
+      eventSource.close()
     }
 
     return () => {

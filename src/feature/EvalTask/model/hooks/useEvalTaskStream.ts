@@ -28,6 +28,7 @@ const useEvalTaskStream = () => {
 
   const mutation = useMutation({
     mutationFn: (dto: EvalTaskDto) => evalTask(dto),
+    onMutate: () => setJobId(null),
     onSuccess: (data) => setJobId(data.jobId),
   })
 
@@ -35,7 +36,7 @@ const useEvalTaskStream = () => {
     ? `${process.env.NEXT_PUBLIC_API_URL}/eval/${jobId}/stream`
     : null
 
-  const { messages, isConnected } = useSse<EvalStreamResult>({
+  const { messages: rawMessages, isConnected } = useSse<EvalStreamResult>({
     url,
     parse: (raw) => {
       try {
@@ -48,6 +49,14 @@ const useEvalTaskStream = () => {
         return {} as EvalStreamResult
       }
     },
+  })
+
+  const messages = rawMessages.flatMap((msg) => {
+    if (!msg.results) return []
+    return msg.results.map((r) => ({
+      success: r.passed,
+      stderr: r.error,
+    }))
   })
 
   return { mutation, messages, isConnected }
