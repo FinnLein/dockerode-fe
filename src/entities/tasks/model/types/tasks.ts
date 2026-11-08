@@ -1,5 +1,5 @@
 
-type Language = 'javascript' | 'golang'
+type Language = 'javascript' | 'golang' | 'python'
 
 export type { Language }
 

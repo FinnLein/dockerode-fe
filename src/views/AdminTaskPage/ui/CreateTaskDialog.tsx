@@ -27,7 +27,7 @@ import { Controller, useForm } from "react-hook-form"
 import { parseTestCases } from "../model/lib/parseTestCases"
 import { CreateTaskFormValues } from '../model/types/CreateTaskFormValues'
 
-const LANGUAGES: Language[] = ['javascript', 'golang']
+const LANGUAGES: Language[] = ['javascript', 'golang', 'python']
 
 const defaultValues: CreateTaskFormValues = {
   title: "",

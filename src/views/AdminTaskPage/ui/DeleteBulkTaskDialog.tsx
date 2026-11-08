@@ -12,16 +12,21 @@ import {
 } from "@/src/shared/components/ui/alert-dialog"
 import { Button } from "@/src/shared/components/ui/button"
 import { Trash2 } from "lucide-react"
+import { useState } from "react"
 
 const DeleteBulkTaskDialog = () => {
+	const [open, setOpen] = useState(false)
 	const { mutate, isPending } = useDeleteBulkTask()
 
-	const handleDelete = () => {
-		mutate()
+	const handleDelete = (e: React.MouseEvent) => {
+		e.preventDefault()
+		mutate(undefined, {
+			onSuccess: () => setOpen(false)
+		})
 	}
 
 	return (
-		<AlertDialog>
+		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger
 				render={
 					<Button
@@ -63,4 +68,3 @@ const DeleteBulkTaskDialog = () => {
 }
 
 export { DeleteBulkTaskDialog }
-

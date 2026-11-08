@@ -10,7 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/shared/components/ui/select"
-import { useState } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
 import { EvalTaskProps } from '../model/types/EvalTaskProps'
 
 const EvalTask = ({
@@ -20,10 +21,28 @@ const EvalTask = ({
   onRun,
   isPending,
 }: EvalTaskProps) => {
-  const [selectedLang, setSelectedLang] = useState<Language>(language[0])
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const queryLang = searchParams.get("lang") as Language | null
+
+  const initialLang = (queryLang && language.includes(queryLang)) 
+    ? queryLang 
+    : language[0]
+
+  const [selectedLang, setSelectedLang] = useState<Language>(initialLang)
 
   const defaultCode = initialCode.find((ic) => ic.language === selectedLang)?.template ?? ""
   const [code, setCode] = useState(defaultCode)
+
+  useEffect(() => {
+    if (queryLang !== selectedLang) {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("lang", selectedLang)
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+    }
+  }, [selectedLang, queryLang, pathname, router, searchParams])
 
   const handleLanguageChange = (newLang: Language) => {
     setSelectedLang(newLang)
