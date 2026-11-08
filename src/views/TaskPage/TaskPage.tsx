@@ -1,6 +1,6 @@
 "use client"
 
-import { useTask } from "@/src/entities/tasks/model/hooks/use-task"
+import { useTask } from "@/src/entities/tasks/model/hooks/useTask"
 import { useEvalTaskStream } from "@/src/feature/EvalTask/model/hooks/useEvalTaskStream"
 import { EvalTask } from "@/src/feature/EvalTask/ui/EvalTask"
 import { Text } from "@/src/shared/components/ui/text"
@@ -26,6 +26,7 @@ const TaskPage = ({ id }: TaskPageProps) => {
     <div className="flex flex-col gap-4 md:flex-row">
       <TaskDetailsCard
         title={task.title}
+        description={task.description}
         language={task.language}
         isProcessing={isProcessing}
         isPending={mutation.isPending}
