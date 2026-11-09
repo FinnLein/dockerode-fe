@@ -44,11 +44,20 @@ export interface TextProps
   extends React.HTMLAttributes<HTMLElement>, VariantProps<typeof textVariants> {
   as?: TextTag
   children?: React.ReactNode
+  htmlFor?: string
 }
 
 const Text = React.forwardRef<HTMLElement, TextProps>(
   (
-    { as: Component = "span", className, children, variant, weight, ...props },
+    {
+      as: Component = "span",
+      className,
+      children,
+      variant,
+      weight,
+      htmlFor,
+      ...props
+    },
     ref
   ) => {
     const Tag = Component as React.ElementType
@@ -61,6 +70,7 @@ const Text = React.forwardRef<HTMLElement, TextProps>(
           textVariants({ variant, weight }),
           className
         )}
+        htmlFor={Component === "label" ? htmlFor : undefined}
         {...props}
       >
         {children}

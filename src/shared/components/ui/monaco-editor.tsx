@@ -1,6 +1,6 @@
 "use client"
 
-import Editor, { OnChange, OnMount } from "@monaco-editor/react"
+import Editor, { BeforeMount, OnChange } from "@monaco-editor/react"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 import { useMounted } from "../../hooks/useMounted"
@@ -30,11 +30,26 @@ const MonacoEditor = ({
     onChange(newValue ?? "")
   }
 
-  const handleEditorDidMount: OnMount = () => {
-    setIsEditorReady(true)
+  const handleBeforeMount: BeforeMount = (monaco) => {
+    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+    })
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: true,
+    })
+
+    if (
+      !monaco.languages
+        .getLanguages()
+        .some((lang: { id: string }) => lang.id === "golang")
+    ) {
+      monaco.languages.register({ id: "golang", aliases: ["go"] })
+    }
   }
 
-  const editorTheme = mounted && resolvedTheme === "light" ? "light" : "vs-dark"
+  const editorLanguage = language === "golang" ? "go" : language
 
   return (
     <div className={className}>
@@ -45,11 +60,12 @@ const MonacoEditor = ({
           </div>
         )}
         <Editor
-          theme={editorTheme}
-          defaultLanguage={language}
+          theme={mounted && resolvedTheme === "light" ? "light" : "vs-dark"}
+          language={editorLanguage}
           value={value}
           onChange={handleEditorChange}
-          onMount={handleEditorDidMount}
+          beforeMount={handleBeforeMount}
+          onMount={() => setIsEditorReady(true)}
           loading={<div />}
           height={height}
           width="100%"
