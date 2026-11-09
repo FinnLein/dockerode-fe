@@ -38,6 +38,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Exctract metadata (tags, label) for Docker
+        id: meta
         if: steps.release.outputs.version != ''
         uses: docker/metadata-action@v5
         with:
