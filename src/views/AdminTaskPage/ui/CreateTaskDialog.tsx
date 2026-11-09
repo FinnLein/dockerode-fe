@@ -1,7 +1,7 @@
 import type { TestCaseDto } from "@/generated/types"
 import { useCreateTask } from "@/src/entities/tasks/model/hooks/useCreateTask"
-import { Language } from '@/src/entities/tasks/model/types/tasks'
-import { TiptapEditor } from '@/src/shared/components/tiptap'
+import { Language } from "@/src/entities/tasks/model/types/tasks"
+import { TiptapEditor } from "@/src/shared/components/tiptap"
 import { Button } from "@/src/shared/components/ui/button"
 import {
   Dialog,
@@ -20,21 +20,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/shared/components/ui/select"
-import { Text } from '@/src/shared/components/ui/text'
+import { Text } from "@/src/shared/components/ui/text"
 import { Textarea } from "@/src/shared/components/ui/textarea"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { parseTestCases } from "../model/lib/parseTestCases"
-import { CreateTaskFormValues } from '../model/types/CreateTaskFormValues'
+import { CreateTaskFormValues } from "../model/types/CreateTaskFormValues"
 
-const LANGUAGES: Language[] = ['javascript', 'golang', 'python']
+const LANGUAGES: Language[] = ["javascript", "golang", "python"]
 
 const defaultValues: CreateTaskFormValues = {
   title: "",
-  language: ['javascript', 'golang'],
+  language: ["javascript", "golang"],
   initialCode: [
-    { language: 'javascript', template: "" },
-    { language: 'golang', template: "" }
+    { language: "javascript", template: "" },
+    { language: "golang", template: "" },
   ],
   testCases: "",
   description: "",
@@ -42,7 +42,7 @@ const defaultValues: CreateTaskFormValues = {
 
 const CreateTaskDialog = () => {
   const [open, setOpen] = useState(false)
-  const [activeLang, setActiveLang] = useState<Language>('javascript')
+  const [activeLang, setActiveLang] = useState<Language>("javascript")
 
   const {
     register,
@@ -58,7 +58,8 @@ const CreateTaskDialog = () => {
   const { mutate, isPending } = useCreateTask()
 
   const codes = watch("initialCode") || []
-  const currentCode = codes.find((c) => c.language === activeLang)?.template || ""
+  const currentCode =
+    codes.find((c) => c.language === activeLang)?.template || ""
 
   const onSubmit = handleSubmit((values) => {
     let parsedTestCases: TestCaseDto[]
@@ -83,7 +84,7 @@ const CreateTaskDialog = () => {
         onSuccess: () => {
           setOpen(false)
           reset()
-          setActiveLang('javascript')
+          setActiveLang("javascript")
         },
       }
     )
@@ -113,14 +114,11 @@ const CreateTaskDialog = () => {
               name="description"
               rules={{ required: "Описание обязательно" }}
               render={({ field }) => (
-                <TiptapEditor
-                  content={field.value}
-                  onChange={field.onChange}
-                />
+                <TiptapEditor content={field.value} onChange={field.onChange} />
               )}
             />
             {errors.description && (
-              <Text as='p' variant={'destructive'}>
+              <Text as="p" variant={"destructive"}>
                 {errors.description.message}
               </Text>
             )}
@@ -128,7 +126,10 @@ const CreateTaskDialog = () => {
 
           <div className="flex flex-col gap-2">
             <Label>Начальный код</Label>
-            <Select value={activeLang} onValueChange={(val) => setActiveLang(val as Language)}>
+            <Select
+              value={activeLang}
+              onValueChange={(val) => setActiveLang(val as Language)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Выберите язык" />
               </SelectTrigger>
@@ -145,17 +146,25 @@ const CreateTaskDialog = () => {
               value={currentCode}
               onChange={(e) => {
                 const newCodes = [...codes]
-                const index = newCodes.findIndex((c) => c.language === activeLang)
+                const index = newCodes.findIndex(
+                  (c) => c.language === activeLang
+                )
 
                 if (index !== -1) {
-                  newCodes[index] = { ...newCodes[index], template: e.target.value }
+                  newCodes[index] = {
+                    ...newCodes[index],
+                    template: e.target.value,
+                  }
                 } else {
-                  newCodes.push({ language: activeLang, template: e.target.value })
+                  newCodes.push({
+                    language: activeLang,
+                    template: e.target.value,
+                  })
                 }
 
                 setValue("initialCode", newCodes, { shouldDirty: true })
               }}
-              className="font-mono mt-2"
+              className="mt-2 font-mono"
               rows={6}
             />
           </div>
@@ -171,7 +180,7 @@ const CreateTaskDialog = () => {
               placeholder={"2 3 => 5\n10 20 => 30"}
             />
             {errors.testCases && (
-              <Text as='span' variant={'destructive'}>
+              <Text as="span" variant={"destructive"}>
                 {errors.testCases.message}
               </Text>
             )}
@@ -179,7 +188,12 @@ const CreateTaskDialog = () => {
         </form>
 
         <DialogFooter>
-          <Button type="submit" form="create-task-form" disabled={isPending} className="w-full">
+          <Button
+            type="submit"
+            form="create-task-form"
+            disabled={isPending}
+            className="w-full"
+          >
             {isPending ? "Создание..." : "Создать"}
           </Button>
         </DialogFooter>

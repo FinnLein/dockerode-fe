@@ -1,6 +1,11 @@
 import type { TaskResponseDto } from "@/generated/types"
 import { Badge } from "@/src/shared/components/ui/badge"
-import { Card, CardAction, CardHeader, CardTitle } from "@/src/shared/components/ui/card"
+import {
+  Card,
+  CardAction,
+  CardHeader,
+  CardTitle,
+} from "@/src/shared/components/ui/card"
 import Link from "next/link"
 
 interface TaskCardProps {

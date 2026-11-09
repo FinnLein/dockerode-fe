@@ -1,5 +1,5 @@
-import { AdminTaskPage } from '@/src/views/AdminTaskPage/AdminTaskPage';
+import { AdminTaskPage } from "@/src/views/AdminTaskPage/AdminTaskPage"
 
 export default function TaskPage() {
-	return <AdminTaskPage />
+  return <AdminTaskPage />
 }

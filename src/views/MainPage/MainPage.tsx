@@ -1,7 +1,7 @@
 "use client"
 
 import { useTasks } from "@/src/entities/tasks/model/hooks/useTasks"
-import { TaskCard } from '@/src/entities/tasks/ui/TaskCard'
+import { TaskCard } from "@/src/entities/tasks/ui/TaskCard"
 import { Skeleton } from "@/src/shared/components/ui/skeleton"
 import { Text } from "@/src/shared/components/ui/text"
 

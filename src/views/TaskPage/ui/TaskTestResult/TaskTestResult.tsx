@@ -10,7 +10,13 @@ interface TaskTestResultProps {
   expected?: string
 }
 
-const TaskTestResult = ({ index, success, stderr, actual, expected }: TaskTestResultProps) => {
+const TaskTestResult = ({
+  index,
+  success,
+  stderr,
+  actual,
+  expected,
+}: TaskTestResultProps) => {
   return (
     <div className="rounded-md bg-muted/50 p-4">
       <div className="mb-2 flex items-center justify-between">
@@ -21,7 +27,7 @@ const TaskTestResult = ({ index, success, stderr, actual, expected }: TaskTestRe
           {success ? "Успешно" : "Провалено"}
         </Text>
       </div>
-      
+
       {!success && (actual !== undefined || expected !== undefined) && (
         <div className="mt-2 flex flex-col gap-1 font-mono text-xs">
           {expected !== undefined && (

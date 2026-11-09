@@ -1,6 +1,6 @@
 import type { TaskResponseDto, TestCaseDto } from "@/generated/types"
 import { useUpdateTask } from "@/src/entities/tasks/model/hooks/useUpdateTask"
-import { TiptapEditor } from '@/src/shared/components/tiptap'
+import { TiptapEditor } from "@/src/shared/components/tiptap"
 import { Button } from "@/src/shared/components/ui/button"
 import {
   Dialog,
@@ -18,14 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/shared/components/ui/select"
-import { Text } from '@/src/shared/components/ui/text'
+import { Text } from "@/src/shared/components/ui/text"
 import { Textarea } from "@/src/shared/components/ui/textarea"
-import { Edit } from 'lucide-react'
+import { Edit } from "lucide-react"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { parseTestCases } from "../../../views/AdminTaskPage/model/lib/parseTestCases"
-import { EditTaskFormValues } from '../model/types/EditTaskFormValues'
-import { Language } from '../model/types/tasks'
+import { EditTaskFormValues } from "../model/types/EditTaskFormValues"
+import { Language } from "../model/types/tasks"
 
 const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
   const [open, setOpen] = useState(false)
@@ -36,8 +36,8 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
   const defaultValues: EditTaskFormValues = {
     title: task.title,
     description: descriptionHtml,
-    language: task.language, 
-    initialCode: task.initialCode, 
+    language: task.language,
+    initialCode: task.initialCode,
     testCases: task.testCases
       .map((testCase) => `${testCase.input} => ${testCase.expected}`)
       .join("\n"),
@@ -57,7 +57,8 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
   const { mutate, isPending } = useUpdateTask()
 
   const codes = watch("initialCode") || []
-  const currentCode = codes.find((c) => c.language === activeLang)?.template || ""
+  const currentCode =
+    codes.find((c) => c.language === activeLang)?.template || ""
 
   const onSubmit = handleSubmit((values) => {
     let parsedTestCases: TestCaseDto[]
@@ -77,7 +78,7 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
           title: values.title,
           description: { html: values.description },
           language: values.language,
-          initialCode: values.initialCode, 
+          initialCode: values.initialCode,
           testCases: parsedTestCases,
         },
       },
@@ -105,7 +106,6 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
           <DialogTitle>Редактировать задачу</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
-
           <div className="flex flex-col gap-2">
             <Label>Название задачи</Label>
             <Input {...register("title", { required: true })} />
@@ -126,7 +126,7 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
               )}
             />
             {errors.description && (
-              <Text as='span' variant={'destructive'}>
+              <Text as="span" variant={"destructive"}>
                 {errors.description.message}
               </Text>
             )}
@@ -138,9 +138,13 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
               control={control}
               name="language"
               render={({ field }) => (
-                <Input 
+                <Input
                   value={field.value.join(", ")}
-                  onChange={(e) => field.onChange(e.target.value.split(",").map(s => s.trim()))}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value.split(",").map((s) => s.trim())
+                    )
+                  }
                 />
               )}
             />
@@ -148,7 +152,10 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
 
           <div className="flex flex-col gap-2">
             <Label>Начальный код</Label>
-            <Select value={activeLang} onValueChange={(val) => setActiveLang(val as Language)}>
+            <Select
+              value={activeLang}
+              onValueChange={(val) => setActiveLang(val as Language)}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Выберите язык" />
               </SelectTrigger>
@@ -165,27 +172,32 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
               value={currentCode}
               onChange={(e) => {
                 const newCodes = [...codes]
-                const index = newCodes.findIndex((c) => c.language === activeLang)
-                
+                const index = newCodes.findIndex(
+                  (c) => c.language === activeLang
+                )
+
                 if (index !== -1) {
-                  newCodes[index] = { ...newCodes[index], template: e.target.value }
+                  newCodes[index] = {
+                    ...newCodes[index],
+                    template: e.target.value,
+                  }
                 } else {
-                  newCodes.push({ language: activeLang, template: e.target.value })
+                  newCodes.push({
+                    language: activeLang,
+                    template: e.target.value,
+                  })
                 }
-                
+
                 setValue("initialCode", newCodes, { shouldDirty: true })
               }}
-              className="font-mono mt-2"
+              className="mt-2 font-mono"
               rows={6}
             />
           </div>
 
           <div className="flex flex-col gap-2">
             <Label>Тест-кейсы (каждый с новой строки)</Label>
-            <Textarea
-              {...register("testCases", { required: true })}
-              rows={4}
-            />
+            <Textarea {...register("testCases", { required: true })} rows={4} />
             {errors.testCases && (
               <p className="text-sm text-destructive">
                 {errors.testCases.message}
