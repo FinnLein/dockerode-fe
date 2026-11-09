@@ -1,18 +1,18 @@
 import type { TaskResponseDto } from "@/generated/types"
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/src/shared/components/ui/alert-dialog"
 import { Button } from "@/src/shared/components/ui/button"
 import { Trash2 } from "lucide-react"
-import { useDeleteTask } from '../model/hooks/useDeleteTask'
+import { useDeleteTask } from "../model/hooks/useDeleteTask"
 
 const DeleteTaskDialog = ({ task }: { task: TaskResponseDto }) => {
   const { mutate, isPending } = useDeleteTask()

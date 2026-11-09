@@ -33,5 +33,12 @@ const deleteBulk = async () => {
   return api.delete<{ count: number }>("tasks").then((res) => res.data)
 }
 
-export { createBulk, createTask, deleteBulk, deleteTask, getTask, getTasks, updateTask }
-
+export {
+  createBulk,
+  createTask,
+  deleteBulk,
+  deleteTask,
+  getTask,
+  getTasks,
+  updateTask,
+}

@@ -4,9 +4,9 @@ import { useTasks } from "@/src/entities/tasks/model/hooks/useTasks"
 import { AdminTaskCard } from "@/src/entities/tasks/ui/AdminTaskCard"
 import { Skeleton } from "@/src/shared/components/ui/skeleton"
 import { Text } from "@/src/shared/components/ui/text"
-import { CreateBulkTaskDialog } from './ui/CreateBulkTaskDialog'
-import { CreateTaskDialog } from './ui/CreateTaskDialog'
-import { DeleteBulkTaskDialog } from './ui/DeleteBulkTaskDialog'
+import { CreateBulkTaskDialog } from "./ui/CreateBulkTaskDialog"
+import { CreateTaskDialog } from "./ui/CreateTaskDialog"
+import { DeleteBulkTaskDialog } from "./ui/DeleteBulkTaskDialog"
 
 const AdminTaskPage = () => {
   const { data: tasks, isLoading, isError } = useTasks()

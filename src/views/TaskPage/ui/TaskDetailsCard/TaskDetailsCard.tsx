@@ -1,7 +1,7 @@
 "use client"
 
-import { Language } from '@/src/entities/tasks/model/types/tasks'
-import { TiptapViewer } from '@/src/shared/components/tiptap-viewer'
+import { Language } from "@/src/entities/tasks/model/types/tasks"
+import { TiptapViewer } from "@/src/shared/components/tiptap-viewer"
 import { Badge } from "@/src/shared/components/ui/badge"
 import {
   Card,
@@ -18,7 +18,12 @@ interface TaskDetailsCardProps {
   description: { html?: string } | unknown
   isProcessing: boolean
   isPending: boolean
-  messages: Array<{ success: boolean; stderr?: string }>
+  messages: Array<{
+    success: boolean
+    stderr?: string
+    actual?: string
+    expected?: string
+  }>
 }
 
 const TaskDetailsCard = ({

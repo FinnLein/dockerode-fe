@@ -1,6 +1,6 @@
 "use client"
 
-import { Language } from '@/src/entities/tasks/model/types/tasks'
+import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { Button } from "@/src/shared/components/ui/button"
 import { MonacoEditor } from "@/src/shared/components/ui/monaco-editor"
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/src/shared/components/ui/select"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { EvalTaskProps } from '../model/types/EvalTaskProps'
+import { EvalTaskProps } from "../model/types/EvalTaskProps"
 
 const EvalTask = ({
   language,
@@ -27,13 +27,13 @@ const EvalTask = ({
 
   const queryLang = searchParams.get("lang") as Language | null
 
-  const initialLang = (queryLang && language.includes(queryLang)) 
-    ? queryLang 
-    : language[0]
+  const initialLang =
+    queryLang && language.includes(queryLang) ? queryLang : language[0]
 
   const [selectedLang, setSelectedLang] = useState<Language>(initialLang)
 
-  const defaultCode = initialCode.find((ic) => ic.language === selectedLang)?.template ?? ""
+  const defaultCode =
+    initialCode.find((ic) => ic.language === selectedLang)?.template ?? ""
   const [code, setCode] = useState(defaultCode)
 
   useEffect(() => {
@@ -46,13 +46,17 @@ const EvalTask = ({
 
   const handleLanguageChange = (newLang: Language) => {
     setSelectedLang(newLang)
-    const newDefaultCode = initialCode.find((ic) => ic.language === newLang)?.template ?? ""
+    const newDefaultCode =
+      initialCode.find((ic) => ic.language === newLang)?.template ?? ""
     setCode(newDefaultCode)
   }
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <Select value={selectedLang} onValueChange={(val) => handleLanguageChange(val as Language)}>
+      <Select
+        value={selectedLang}
+        onValueChange={(val) => handleLanguageChange(val as Language)}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Выберите язык" />
         </SelectTrigger>

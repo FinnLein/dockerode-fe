@@ -1,0 +1,14 @@
+module.exports = {
+  branches: ['master'],
+  plugins: [
+    '@semantic-release/commit-analyzer',
+    '@semantic-release/release-notes-generator',
+    '@semantic-release/github',
+    [
+      '@semantic-release/exec',
+      {
+        publishCmd: 'echo "version=v${nextRelease.version}" >> $GITHUB_OUTPUT',
+      },
+    ],
+  ],
+};

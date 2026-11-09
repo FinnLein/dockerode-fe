@@ -40,12 +40,16 @@ const MonacoEditor = ({
       noSyntaxValidation: true,
     })
 
-    if (!monaco.languages.getLanguages().some((lang: { id: string }) => lang.id === 'golang')) {
-      monaco.languages.register({ id: 'golang', aliases: ['go'] })
+    if (
+      !monaco.languages
+        .getLanguages()
+        .some((lang: { id: string }) => lang.id === "golang")
+    ) {
+      monaco.languages.register({ id: "golang", aliases: ["go"] })
     }
   }
 
-  const editorLanguage = language === 'golang' ? 'go' : language
+  const editorLanguage = language === "golang" ? "go" : language
 
   return (
     <div className={className}>

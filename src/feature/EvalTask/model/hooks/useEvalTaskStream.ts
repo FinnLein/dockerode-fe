@@ -56,6 +56,8 @@ const useEvalTaskStream = () => {
     return msg.results.map((r) => ({
       success: r.passed,
       stderr: r.error,
+      actual: r.actual,
+      expected: r.expected,
     }))
   })
 
