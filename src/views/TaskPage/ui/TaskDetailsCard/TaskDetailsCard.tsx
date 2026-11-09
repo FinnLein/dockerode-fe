@@ -18,7 +18,7 @@ interface TaskDetailsCardProps {
   description: { html?: string } | unknown
   isProcessing: boolean
   isPending: boolean
-  messages: Array<{ success: boolean; stderr?: string }>
+  messages: Array<{ success: boolean; stderr?: string; actual?: string; expected?: string }>
 }
 
 const TaskDetailsCard = ({

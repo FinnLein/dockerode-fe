@@ -3,7 +3,7 @@
 import { TaskTestResult } from "../TaskTestResult/TaskTestResult"
 
 interface TaskTestListProps {
-  messages: Array<{ success: boolean; stderr?: string }>
+  messages: Array<{ success: boolean; stderr?: string; actual?: string; expected?: string }>
 }
 
 const TaskTestList = ({ messages }: TaskTestListProps) => {
@@ -17,6 +17,8 @@ const TaskTestList = ({ messages }: TaskTestListProps) => {
           index={index}
           success={msg.success}
           stderr={msg.stderr}
+          actual={msg.actual}
+          expected={msg.expected}
         />
       ))}
     </div>
