@@ -1,11 +1,47 @@
-import { useMutation } from "@tanstack/react-query"
-import { evalTask } from "../api/eval"
+import { Language } from "@/src/entities/tasks/model/types/tasks"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { EvalTaskProps } from '../types/EvalTaskProps'
 
-const useEvalTask = () => {
-  return useMutation({
-    mutationKey: ["eval-task"],
-    mutationFn: (dto: Parameters<typeof evalTask>[0]) => evalTask(dto),
-  })
+interface UseEvalTaskParams {
+  language: Language[]
+  initialCode: EvalTaskProps["initialCode"]
 }
 
-export { useEvalTask }
+export const useEvalTask = ({ language, initialCode }: UseEvalTaskParams) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const queryLang = searchParams.get("lang") as Language | null
+
+  const initialLang =
+    queryLang && language.includes(queryLang) ? queryLang : language[0]
+
+  const [selectedLang, setSelectedLang] = useState<Language>(initialLang)
+
+  const getDefaultCode = (lang: Language) =>
+    initialCode.find((ic) => ic.language === lang)?.template ?? ""
+
+  const [code, setCode] = useState(() => getDefaultCode(initialLang))
+
+  useEffect(() => {
+    if (queryLang !== selectedLang) {
+      const params = new URLSearchParams(searchParams.toString())
+      params.set("lang", selectedLang)
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+    }
+  }, [selectedLang, queryLang, pathname, router, searchParams])
+
+  const handleLanguageChange = (newLang: Language) => {
+    setSelectedLang(newLang)
+    setCode(getDefaultCode(newLang))
+  }
+
+  return {
+    selectedLang,
+    code,
+    setCode,
+    handleLanguageChange,
+  }
+}

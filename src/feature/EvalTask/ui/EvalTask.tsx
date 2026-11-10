@@ -2,7 +2,7 @@
 
 import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { Button } from "@/src/shared/components/ui/button"
-import { MonacoEditor } from "@/src/shared/components/ui/monaco-editor"
+import { CollabMonacoEditor } from '@/src/shared/components/ui/collab-monaco-editor'
 import {
   Select,
   SelectContent,
@@ -10,8 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/shared/components/ui/select"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useSearchParams } from 'next/navigation'
+import { useCollabSession } from '../model/hooks/useCollabSession'
+import { useEvalTask } from '../model/hooks/useEvalTask'
 import { EvalTaskProps } from "../model/types/EvalTaskProps"
 
 const EvalTask = ({
@@ -21,34 +22,22 @@ const EvalTask = ({
   onRun,
   isPending,
 }: EvalTaskProps) => {
-  const router = useRouter()
-  const pathname = usePathname()
   const searchParams = useSearchParams()
+  const roomId = searchParams.get('roomId')
 
-  const queryLang = searchParams.get("lang") as Language | null
+  const { selectedLang, handleLanguageChange } = useEvalTask({
+    language,
+    initialCode,
+  })
 
-  const initialLang =
-    queryLang && language.includes(queryLang) ? queryLang : language[0]
+  const session = useCollabSession(roomId)
 
-  const [selectedLang, setSelectedLang] = useState<Language>(initialLang)
+  if (!roomId) {
+    return <div>Комната не найдена</div>
+  }
 
-  const defaultCode =
-    initialCode.find((ic) => ic.language === selectedLang)?.template ?? ""
-  const [code, setCode] = useState(defaultCode)
-
-  useEffect(() => {
-    if (queryLang !== selectedLang) {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set("lang", selectedLang)
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
-    }
-  }, [selectedLang, queryLang, pathname, router, searchParams])
-
-  const handleLanguageChange = (newLang: Language) => {
-    setSelectedLang(newLang)
-    const newDefaultCode =
-      initialCode.find((ic) => ic.language === newLang)?.template ?? ""
-    setCode(newDefaultCode)
+  if (!session) {
+    return <div>Загрузка...</div>
   }
 
   return (
@@ -69,17 +58,17 @@ const EvalTask = ({
         </SelectContent>
       </Select>
 
-      <MonacoEditor
+      <CollabMonacoEditor
+        ytext={session.ytext}
+        awareness={session.awareness}
         language={selectedLang}
-        value={code}
-        onChange={setCode}
         height="60vh"
       />
 
       <Button
         disabled={isPending}
         className="w-full"
-        onClick={() => onRun({ code, language: selectedLang, testCases })}
+        onClick={() => onRun({ code: session.ytext.toString(), language: selectedLang, testCases })}
       >
         {isPending ? "Загрузка..." : "Запустить решение"}
       </Button>
@@ -88,3 +77,4 @@ const EvalTask = ({
 }
 
 export { EvalTask }
+
