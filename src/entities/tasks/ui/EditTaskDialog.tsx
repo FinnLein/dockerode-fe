@@ -3,21 +3,21 @@ import { useUpdateTask } from "@/src/entities/tasks/model/hooks/useUpdateTask"
 import { TiptapEditor } from "@/src/shared/components/tiptap"
 import { Button } from "@/src/shared/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/src/shared/components/ui/dialog"
 import { Input } from "@/src/shared/components/ui/input"
 import { Label } from "@/src/shared/components/ui/label"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/src/shared/components/ui/select"
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/src/shared/components/ui/select/select"
 import { Text } from "@/src/shared/components/ui/text"
 import { Textarea } from "@/src/shared/components/ui/textarea"
 import { Edit } from "lucide-react"
@@ -215,3 +215,4 @@ const EditTaskDialog = ({ task }: { task: TaskResponseDto }) => {
 }
 
 export { EditTaskDialog }
+

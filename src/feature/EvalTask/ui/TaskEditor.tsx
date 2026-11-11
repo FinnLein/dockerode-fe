@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/shared/components/ui/select"
+} from "@/src/shared/components/ui/select/select"
 import { Session } from "../model/hooks/useCollabSession"
 
 interface TaskEditorProps {
