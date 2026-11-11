@@ -91,6 +91,7 @@ const EditorCore = ({
           </div>
         )}
         <Editor
+          path="collab-model"
           theme={mounted && resolvedTheme === "light" ? "light" : "vs-dark"}
           language={editorLanguage}
           beforeMount={handleBeforeMount}

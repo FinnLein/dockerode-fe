@@ -3,6 +3,7 @@ import { Share, SquareArrowRightExit } from 'lucide-react'
 
 interface CollabRoomControlsProps {
   roomId: string | null
+  isPending: boolean
   onCreate: () => void
   onLeave: () => void
   onShare: () => void
@@ -10,14 +11,20 @@ interface CollabRoomControlsProps {
 
 export const CollabRoomControls = ({
   roomId,
+  isPending,
   onCreate,
   onLeave,
   onShare,
 }: CollabRoomControlsProps) => {
   if (!roomId) {
     return (
-      <Button type='button' variant={'secondary'} onClick={onCreate}>
-        Совместное редактирование
+      <Button
+        type='button'
+        variant={'secondary'}
+        onClick={onCreate}
+        disabled={isPending}
+      >
+        {isPending ? 'Создание комнаты...' : 'Совместное редактирование'}
       </Button>
     )
   }

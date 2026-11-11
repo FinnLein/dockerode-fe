@@ -38,10 +38,15 @@ export const useEvalTask = ({ language, initialCode }: UseEvalTaskParams) => {
     setCode(getDefaultCode(newLang))
   }
 
+  const setCodeDebug = (v: string) => {
+    console.log('SET_CODE:', JSON.stringify(v), new Error().stack)
+    setCode(v)
+  }
+
   return {
     selectedLang,
     code,
-    setCode,
+    setCode: setCodeDebug, // <-- временно
     handleLanguageChange,
   }
 }

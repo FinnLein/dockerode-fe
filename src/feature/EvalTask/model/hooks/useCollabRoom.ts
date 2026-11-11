@@ -1,30 +1,37 @@
+import { useCreateRoom } from '@/src/entities/rooms/model/hooks/useCreateRoom'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import * as Y from 'yjs'
 
-export const useCollabRoom = (getCurrentCode: () => string, onLeave: () => void) => {
+export const useCollabRoom = (
+  taskId: string,
+  getCurrentCode: () => string,
+  onLeave?: () => void
+) => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
+  const { mutateAsync, isPending: isCreatingRoom } = useCreateRoom()
+
   const roomId = searchParams.get('roomId')
 
-  const createRoom = () => {
-    const newRoomId = crypto.randomUUID()
+  const createRoom = async () => {
+    try {
+      const room = await mutateAsync({
+        taskId,
+        initialCode: getCurrentCode(),
+      })
 
-    const tempDoc = new Y.Doc()
-    tempDoc.getText('code').insert(0, getCurrentCode())
-    const state = Y.encodeStateAsUpdate(tempDoc)
-
-    sessionStorage.setItem(`yjs-init-${newRoomId}`, JSON.stringify(Array.from(state)))
-    tempDoc.destroy()
-
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('roomId', newRoomId)
-    router.push(`${pathname}?${params.toString()}`)
+      const params = new URLSearchParams(searchParams.toString())
+      params.set('roomId', room.id)
+      router.push(`${pathname}?${params.toString()}`)
+    } catch (error) {
+      console.error('Ошибка при создании комнаты:', error)
+    }
   }
 
   const leaveRoom = () => {
-    onLeave()
+    onLeave?.()
+
     const params = new URLSearchParams(searchParams.toString())
     params.delete('roomId')
     router.push(`${pathname}?${params.toString()}`)
@@ -33,11 +40,18 @@ export const useCollabRoom = (getCurrentCode: () => string, onLeave: () => void)
   const shareRoom = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
+
       alert('Ссылка скопирована в буфер обмена!')
     } catch (err) {
       console.error('Не удалось скопировать ссылку', err)
     }
   }
 
-  return { roomId, createRoom, leaveRoom, shareRoom }
+  return {
+    roomId,
+    createRoom,
+    leaveRoom,
+    shareRoom,
+    isCreatingRoom
+  }
 }
