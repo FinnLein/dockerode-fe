@@ -3,8 +3,9 @@
 import Editor, { BeforeMount, OnMount } from "@monaco-editor/react"
 import type { editor as MonacoEditorType } from 'monaco-editor'
 import { useTheme } from "next-themes"
+import dynamic from "next/dynamic"
 import { useEffect, useRef, useState } from "react"
-import { MonacoBinding } from 'y-monaco'
+import type { MonacoBinding } from 'y-monaco'
 import { Awareness } from 'y-protocols/awareness'
 import * as Y from 'yjs'
 import { useMounted } from "../../hooks/useMounted"
@@ -18,7 +19,7 @@ interface CollabMonacoEditorProps {
   className?: string
 }
 
-const CollabMonacoEditor = ({
+const EditorCore = ({
   ytext,
   awareness,
   language,
@@ -62,15 +63,18 @@ const CollabMonacoEditor = ({
   useEffect(() => {
     if (!isEditorReady || !modelRef.current || !editorRef.current) return
 
-    bindingRef.current?.destroy()
-    bindingRef.current = new MonacoBinding(
-      ytext,
-      modelRef.current,
-      new Set([editorRef.current]),
-      awareness,
-    )
+    let cancelled = false
+    const model = modelRef.current
+    const editor = editorRef.current
+
+    import('y-monaco').then(({ MonacoBinding }) => {
+      if (cancelled) return
+      bindingRef.current?.destroy()
+      bindingRef.current = new MonacoBinding(ytext, model, new Set([editor]), awareness)
+    })
 
     return () => {
+      cancelled = true
       bindingRef.current?.destroy()
       bindingRef.current = null
     }
@@ -107,6 +111,14 @@ const CollabMonacoEditor = ({
     </div>
   )
 }
+
+const CollabMonacoEditor = dynamic(
+  () => Promise.resolve(EditorCore),
+  {
+    ssr: false,
+    loading: () => <div className="h-100 flex items-center justify-center bg-background/50">Загрузка редактора...</div>
+  }
+)
 
 export { CollabMonacoEditor }
 
