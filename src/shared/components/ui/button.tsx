@@ -39,7 +39,8 @@ const buttonVariants = cva(
   }
 )
 
-interface ButtonProps extends ButtonPrimitive.Props, VariantProps<typeof buttonVariants> {
+interface ButtonProps
+  extends ButtonPrimitive.Props, VariantProps<typeof buttonVariants> {
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
 }
@@ -60,15 +61,21 @@ function Button({
       {...props}
     >
       {leftIcon && (
-        <span data-icon="inline-start" className="inline-flex shrink-0 items-center justify-center">
+        <span
+          data-icon="inline-start"
+          className="inline-flex shrink-0 items-center justify-center"
+        >
           {leftIcon}
         </span>
       )}
-      
+
       {children}
-      
+
       {rightIcon && (
-        <span data-icon="inline-end" className="inline-flex shrink-0 items-center justify-center">
+        <span
+          data-icon="inline-end"
+          className="inline-flex shrink-0 items-center justify-center"
+        >
           {rightIcon}
         </span>
       )}

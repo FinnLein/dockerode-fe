@@ -1,28 +1,26 @@
-import { useEffect, useState } from 'react'
-import * as Y from 'yjs'
+import { useCallback, useSyncExternalStore } from "react"
+import * as Y from "yjs"
 
-const useYObserver = <T>(ymeta: Y.Map<T> | null, key: string, defaultValue: T) => {
-	const [value, setValue] = useState(() => {
-		return ymeta?.get(key) ?? defaultValue
-	})
+const noopUnsubscribe = () => {}
 
-	useEffect(() => {
-		if (!ymeta) {
-			setValue(defaultValue)
-			return
-		}
+const useYObserver = <T>(
+  ymeta: Y.Map<T> | null,
+  key: string,
+  defaultValue: T
+) => {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      if (!ymeta) return noopUnsubscribe
+      ymeta.observe(onChange)
 
-		const handler = () => {
-			setValue((ymeta.get(key) as T) ?? defaultValue)
-		}
+      return () => ymeta?.unobserve(onChange)
+    },
+    [ymeta]
+  )
 
-		ymeta.observe(handler)
+  const getSnapshot = () => ymeta?.get(key) ?? defaultValue
 
-		return () => ymeta?.unobserve(handler)
-	}, [ymeta, key, defaultValue])
-
-	return value
+  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
 }
 
 export { useYObserver }
-

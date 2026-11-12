@@ -1,6 +1,6 @@
 import { Language } from "@/src/entities/tasks/model/types/tasks"
-import { CollabMonacoEditor } from '@/src/shared/components/ui/collab-monaco-editor'
-import { MonacoEditor } from '@/src/shared/components/ui/monaco-editor'
+import { CollabMonacoEditor } from "@/src/shared/components/ui/collab-monaco-editor"
+import { MonacoEditor } from "@/src/shared/components/ui/monaco-editor"
 import {
   Select,
   SelectContent,

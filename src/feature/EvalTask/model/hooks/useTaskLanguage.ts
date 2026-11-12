@@ -1,6 +1,6 @@
-import { Language } from '@/src/entities/tasks/model/types/tasks'
-import { useYObserver } from '@/src/shared/hooks/useYObserver'
-import { Session } from './useCollabSession'
+import { Language } from "@/src/entities/tasks/model/types/tasks"
+import { useYObserver } from "@/src/shared/hooks/useYObserver"
+import { Session } from "./useCollabSession"
 
 interface UseTaskLanguageArgs {
   session: Session | null
@@ -11,13 +11,13 @@ interface UseTaskLanguageArgs {
 const useTaskLanguage = (args: UseTaskLanguageArgs) => {
   const { session, localLang, localSetLang } = args
 
-  const collabLang = useYObserver(session?.ymeta ?? null, 'language', localLang)
+  const collabLang = useYObserver(session?.ymeta ?? null, "language", localLang)
 
   const currentLang = session ? collabLang : localLang
 
   const handleLangChange = (newLang: Language) => {
     if (session) {
-      session.ymeta.set('language', newLang)
+      session.ymeta.set("language", newLang)
     } else {
       localSetLang(newLang)
     }

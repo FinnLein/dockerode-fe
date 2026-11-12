@@ -60,6 +60,7 @@ const MonacoEditor = ({
           </div>
         )}
         <Editor
+          path="local-model"
           theme={mounted && resolvedTheme === "light" ? "light" : "vs-dark"}
           language={editorLanguage}
           value={value}

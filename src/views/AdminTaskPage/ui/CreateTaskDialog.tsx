@@ -4,26 +4,26 @@ import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { TiptapEditor } from "@/src/shared/components/tiptap"
 import { Button } from "@/src/shared/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/src/shared/components/ui/dialog"
 import { Input } from "@/src/shared/components/ui/input"
 import { Label } from "@/src/shared/components/ui/label"
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/src/shared/components/ui/select/select"
 import { Text } from "@/src/shared/components/ui/text"
 import { Textarea } from "@/src/shared/components/ui/textarea"
 import { useState } from "react"
-import { Controller, useForm } from "react-hook-form"
+import { Controller, useForm, useWatch } from "react-hook-form"
 import { parseTestCases } from "../model/lib/parseTestCases"
 import { CreateTaskFormValues } from "../model/types/CreateTaskFormValues"
 
@@ -50,14 +50,13 @@ const CreateTaskDialog = () => {
     reset,
     setError,
     control,
-    watch,
     setValue,
     formState: { errors },
   } = useForm<CreateTaskFormValues>({ defaultValues })
 
   const { mutate, isPending } = useCreateTask()
 
-  const codes = watch("initialCode") || []
+  const codes = useWatch({ control, name: "initialCode" }) || []
   const currentCode =
     codes.find((c) => c.language === activeLang)?.template || ""
 
@@ -203,4 +202,3 @@ const CreateTaskDialog = () => {
 }
 
 export { CreateTaskDialog }
-

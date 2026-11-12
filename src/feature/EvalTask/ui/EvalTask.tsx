@@ -1,18 +1,19 @@
 "use client"
 
-import { Language } from '@/src/entities/tasks/model/types/tasks'
+import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { Button } from "@/src/shared/components/ui/button"
-import { Play } from 'lucide-react'
-import { useRef } from 'react'
-import { useCollabRoom } from '../model/hooks/useCollabRoom'
-import { Session, useCollabSession } from '../model/hooks/useCollabSession'
-import { useEvalTask } from '../model/hooks/useEvalTask'
-import { useTaskLanguage } from '../model/hooks/useTaskLanguage'
+import { Play } from "lucide-react"
+import { useEffect } from "react"
+import { useCollabRoom } from "../model/hooks/useCollabRoom"
+import { useCollabSession } from "../model/hooks/useCollabSession"
+import { useEvalTask } from "../model/hooks/useEvalTask"
+import { useTaskLanguage } from "../model/hooks/useTaskLanguage"
 import { EvalTaskProps } from "../model/types/EvalTaskProps"
-import { CollabRoomControls } from './CollabRoomControls'
-import { TaskEditor } from './TaskEditor'
+import { CollabRoomControls } from "./CollabRoomControls"
+import { TaskEditor } from "./TaskEditor"
 
 export const EvalTask = ({
+  taskId,
   language,
   initialCode,
   testCases,
@@ -24,19 +25,26 @@ export const EvalTask = ({
     initialCode,
   })
 
-  const sessionRef = useRef<Session | null>(null)
-
-  const { roomId, createRoom, leaveRoom, shareRoom } = useCollabRoom(() => code, () => {
-    if (sessionRef.current) setCode(sessionRef.current.ytext.toString())
-  })
+  const { roomId, createRoom, leaveRoom, shareRoom, isCreatingRoom } =
+    useCollabRoom(taskId, () => code)
 
   const session = useCollabSession(roomId)
-  sessionRef.current = session
+
+  useEffect(() => {
+    if (!session) return
+    const { ytext } = session
+
+    const sync = () => setCode(ytext.toString())
+
+    ytext.observe(sync)
+
+    return () => ytext.unobserve(sync)
+  }, [session, setCode])
 
   const { currentLang, handleLangChange } = useTaskLanguage({
     session,
     localLang: selectedLang,
-    localSetLang: handleLanguageChange
+    localSetLang: handleLanguageChange,
   })
 
   if (roomId && !session) {
@@ -52,12 +60,14 @@ export const EvalTask = ({
     <div className="flex w-full flex-col gap-2">
       <CollabRoomControls
         roomId={roomId}
+        isPending={isCreatingRoom}
         onCreate={createRoom}
         onLeave={leaveRoom}
         onShare={shareRoom}
       />
 
       <TaskEditor
+        key={session ? "collab" : "local"}
         session={session}
         code={code}
         setCode={setCode}

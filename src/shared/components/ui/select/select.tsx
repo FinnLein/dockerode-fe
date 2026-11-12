@@ -5,7 +5,7 @@ import { type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import * as React from "react"
-import { selectTriggerVariants } from './selectTriggerVariants'
+import { selectTriggerVariants } from "./selectTriggerVariants"
 
 const Select = SelectPrimitive.Root
 
@@ -30,8 +30,9 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
 }
 
 interface SelectTriggerProps
-  extends SelectPrimitive.Trigger.Props,
-  VariantProps<typeof selectTriggerVariants> { }
+  extends
+    SelectPrimitive.Trigger.Props,
+    VariantProps<typeof selectTriggerVariants> {}
 
 function SelectTrigger({
   className,
@@ -200,6 +201,5 @@ export {
   SelectScrollUpButton,
   SelectSeparator,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 }
-

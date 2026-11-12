@@ -1,13 +1,13 @@
 "use client"
 
 import Editor, { BeforeMount, OnMount } from "@monaco-editor/react"
-import type { editor as MonacoEditorType } from 'monaco-editor'
+import type { editor as MonacoEditorType } from "monaco-editor"
 import { useTheme } from "next-themes"
 import dynamic from "next/dynamic"
 import { useEffect, useRef, useState } from "react"
-import type { MonacoBinding } from 'y-monaco'
-import { Awareness } from 'y-protocols/awareness'
-import * as Y from 'yjs'
+import type { MonacoBinding } from "y-monaco"
+import { Awareness } from "y-protocols/awareness"
+import * as Y from "yjs"
 import { useMounted } from "../../hooks/useMounted"
 
 interface CollabMonacoEditorProps {
@@ -67,10 +67,15 @@ const EditorCore = ({
     const model = modelRef.current
     const editor = editorRef.current
 
-    import('y-monaco').then(({ MonacoBinding }) => {
+    import("y-monaco").then(({ MonacoBinding }) => {
       if (cancelled) return
       bindingRef.current?.destroy()
-      bindingRef.current = new MonacoBinding(ytext, model, new Set([editor]), awareness)
+      bindingRef.current = new MonacoBinding(
+        ytext,
+        model,
+        new Set([editor]),
+        awareness
+      )
     })
 
     return () => {
@@ -91,6 +96,7 @@ const EditorCore = ({
           </div>
         )}
         <Editor
+          path="collab-model"
           theme={mounted && resolvedTheme === "light" ? "light" : "vs-dark"}
           language={editorLanguage}
           beforeMount={handleBeforeMount}
@@ -104,7 +110,7 @@ const EditorCore = ({
             fontSize: 14,
             scrollBeyondLastLine: false,
             automaticLayout: true,
-            tabSize: 2
+            tabSize: 2,
           }}
         />
       </div>
@@ -112,13 +118,13 @@ const EditorCore = ({
   )
 }
 
-const CollabMonacoEditor = dynamic(
-  () => Promise.resolve(EditorCore),
-  {
-    ssr: false,
-    loading: () => <div className="h-100 flex items-center justify-center bg-background/50">Загрузка редактора...</div>
-  }
-)
+const CollabMonacoEditor = dynamic(() => Promise.resolve(EditorCore), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-100 items-center justify-center bg-background/50">
+      Загрузка редактора...
+    </div>
+  ),
+})
 
 export { CollabMonacoEditor }
-
