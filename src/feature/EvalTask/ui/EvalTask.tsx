@@ -2,89 +2,88 @@
 
 import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { Button } from "@/src/shared/components/ui/button"
-import { MonacoEditor } from "@/src/shared/components/ui/monaco-editor"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/src/shared/components/ui/select"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Play } from "lucide-react"
+import { useEffect } from "react"
+import { useCollabRoom } from "../model/hooks/useCollabRoom"
+import { useCollabSession } from "../model/hooks/useCollabSession"
+import { useEvalTask } from "../model/hooks/useEvalTask"
+import { useTaskLanguage } from "../model/hooks/useTaskLanguage"
 import { EvalTaskProps } from "../model/types/EvalTaskProps"
+import { CollabRoomControls } from "./CollabRoomControls"
+import { TaskEditor } from "./TaskEditor"
 
-const EvalTask = ({
+export const EvalTask = ({
+  taskId,
   language,
   initialCode,
   testCases,
   onRun,
   isPending,
 }: EvalTaskProps) => {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const { selectedLang, handleLanguageChange, code, setCode } = useEvalTask({
+    language,
+    initialCode,
+  })
 
-  const queryLang = searchParams.get("lang") as Language | null
+  const { roomId, createRoom, leaveRoom, shareRoom, isCreatingRoom } =
+    useCollabRoom(taskId, () => code)
 
-  const initialLang =
-    queryLang && language.includes(queryLang) ? queryLang : language[0]
-
-  const [selectedLang, setSelectedLang] = useState<Language>(initialLang)
-
-  const defaultCode =
-    initialCode.find((ic) => ic.language === selectedLang)?.template ?? ""
-  const [code, setCode] = useState(defaultCode)
+  const session = useCollabSession(roomId)
 
   useEffect(() => {
-    if (queryLang !== selectedLang) {
-      const params = new URLSearchParams(searchParams.toString())
-      params.set("lang", selectedLang)
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
-    }
-  }, [selectedLang, queryLang, pathname, router, searchParams])
+    if (!session) return
+    const { ytext } = session
 
-  const handleLanguageChange = (newLang: Language) => {
-    setSelectedLang(newLang)
-    const newDefaultCode =
-      initialCode.find((ic) => ic.language === newLang)?.template ?? ""
-    setCode(newDefaultCode)
+    const sync = () => setCode(ytext.toString())
+
+    ytext.observe(sync)
+
+    return () => ytext.unobserve(sync)
+  }, [session, setCode])
+
+  const { currentLang, handleLangChange } = useTaskLanguage({
+    session,
+    localLang: selectedLang,
+    localSetLang: handleLanguageChange,
+  })
+
+  if (roomId && !session) {
+    return <div className="p-4 text-center">Подключение к комнате...</div>
+  }
+
+  const handleRun = () => {
+    const codeToRun = session ? session.ytext.toString() : code
+    onRun({ code: codeToRun, language: currentLang, testCases })
   }
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <Select
-        value={selectedLang}
-        onValueChange={(val) => handleLanguageChange(val as Language)}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Выберите язык" />
-        </SelectTrigger>
-        <SelectContent>
-          {language.map((lang) => (
-            <SelectItem key={lang} value={lang}>
-              {lang}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <CollabRoomControls
+        roomId={roomId}
+        isPending={isCreatingRoom}
+        onCreate={createRoom}
+        onLeave={leaveRoom}
+        onShare={shareRoom}
+      />
 
-      <MonacoEditor
-        language={selectedLang}
-        value={code}
-        onChange={setCode}
-        height="60vh"
+      <TaskEditor
+        key={session ? "collab" : "local"}
+        session={session}
+        code={code}
+        setCode={setCode}
+        language={language}
+        currentLang={currentLang as Language}
+        onLangChange={handleLangChange}
       />
 
       <Button
+        leftIcon={<Play />}
         disabled={isPending}
         className="w-full"
-        onClick={() => onRun({ code, language: selectedLang, testCases })}
+        onClick={handleRun}
       >
         {isPending ? "Загрузка..." : "Запустить решение"}
       </Button>
     </div>
   )
 }
-
-export { EvalTask }

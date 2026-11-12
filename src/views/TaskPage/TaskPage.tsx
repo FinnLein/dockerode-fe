@@ -35,6 +35,7 @@ const TaskPage = ({ id }: TaskPageProps) => {
 
       <div className="h-full w-full md:w-1/2">
         <EvalTask
+          taskId={task.id}
           key={task.id}
           language={task.language}
           initialCode={task.initialCode}
