@@ -7,12 +7,16 @@ interface EvalTaskProps {
   language: Language[]
   initialCode: { language: Language; template: string }[]
   testCases: TestCaseDto[]
+
   onRun: (dto: {
     code: string
     language: string
     testCases: TestCaseDto[]
   }) => void
   isPending: boolean
+
+  onRunCollab: (dto: { roomId: string; testCases: TestCaseDto[] }) => void
+  isCollabRunning: boolean
 }
 
 export type { EvalTaskProps }

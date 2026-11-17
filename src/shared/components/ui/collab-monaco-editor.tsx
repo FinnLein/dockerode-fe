@@ -1,6 +1,6 @@
 "use client"
 
-import Editor, { BeforeMount, OnMount } from "@monaco-editor/react"
+import Editor, { BeforeMount, type Monaco, OnMount } from "@monaco-editor/react"
 import type { editor as MonacoEditorType } from "monaco-editor"
 import { useTheme } from "next-themes"
 import dynamic from "next/dynamic"
@@ -54,9 +54,12 @@ const EditorCore = ({
     }
   }
 
-  const handleOnMount: OnMount = (editor) => {
+  const handleOnMount: OnMount = (editor, monaco: Monaco) => {
+    const model = editor.getModel()
+    model?.setEOL(monaco.editor.EndOfLineSequence.LF)
+
     editorRef.current = editor
-    modelRef.current = editor.getModel()
+    modelRef.current = model
     setIsEditorReady(true)
   }
 

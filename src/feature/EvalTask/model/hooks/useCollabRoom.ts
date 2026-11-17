@@ -1,9 +1,11 @@
 import { useCreateRoom } from "@/src/entities/rooms/model/hooks/useCreateRoom"
+import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 export const useCollabRoom = (
   taskId: string,
   getCurrentCode: () => string,
+  currentLang: Language,
   onLeave?: () => void
 ) => {
   const router = useRouter()
@@ -19,6 +21,7 @@ export const useCollabRoom = (
       const room = await mutateAsync({
         taskId,
         initialCode: getCurrentCode(),
+        language: currentLang,
       })
 
       const params = new URLSearchParams(searchParams.toString())
