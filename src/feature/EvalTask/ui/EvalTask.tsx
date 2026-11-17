@@ -19,6 +19,8 @@ export const EvalTask = ({
   testCases,
   onRun,
   isPending,
+  onRunCollab,
+  isCollabRunning,
 }: EvalTaskProps) => {
   const { selectedLang, handleLanguageChange, code, setCode } = useEvalTask({
     language,
@@ -26,7 +28,7 @@ export const EvalTask = ({
   })
 
   const { roomId, createRoom, leaveRoom, shareRoom, isCreatingRoom } =
-    useCollabRoom(taskId, () => code)
+    useCollabRoom(taskId, () => code, selectedLang)
 
   const session = useCollabSession(roomId)
 
@@ -52,9 +54,14 @@ export const EvalTask = ({
   }
 
   const handleRun = () => {
-    const codeToRun = session ? session.ytext.toString() : code
-    onRun({ code: codeToRun, language: currentLang, testCases })
+    if (session) {
+      onRunCollab({ roomId: roomId!, testCases })
+    } else {
+      onRun({ code, language: currentLang, testCases })
+    }
   }
+
+  const isLoading = session ? isCollabRunning : isPending
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -78,11 +85,11 @@ export const EvalTask = ({
 
       <Button
         leftIcon={<Play />}
-        disabled={isPending}
+        disabled={isLoading}
         className="w-full"
         onClick={handleRun}
       >
-        {isPending ? "Загрузка..." : "Запустить решение"}
+        {isLoading ? "Загрузка..." : "Запустить решение"}
       </Button>
     </div>
   )

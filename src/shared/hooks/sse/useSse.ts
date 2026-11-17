@@ -1,19 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-
-interface UseSseArgs<T> {
-  url: string | null
-  parse?: (raw: string) => T
-}
-
-interface SseState<T> {
-  isConnected: boolean
-  messages: T[]
-  url: string | null
-}
-
-type UseSseResult<T> = Omit<SseState<T>, "url">
+import { SseState, UseSseArgs, UseSseResult } from "./useSse.types"
 
 const empty = <T>(url: string | null): SseState<T> => ({
   url,
@@ -22,7 +10,7 @@ const empty = <T>(url: string | null): SseState<T> => ({
 })
 
 const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
-  const { url, parse } = args
+  const { url, parse, closeOnFinish = false } = args
 
   const [state, setState] = useState<SseState<T>>(() => empty<T>(null))
 
@@ -39,8 +27,9 @@ const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
 
     const eventSource = new EventSource(url)
 
-    eventSource.onopen = () =>
+    eventSource.onopen = () => {
       setState((prev) => ({ ...base(prev), isConnected: true }))
+    }
 
     eventSource.onmessage = (event) => {
       const fn = parseRef.current
@@ -49,30 +38,33 @@ const useSse = <T = string>(args: UseSseArgs<T>): UseSseResult<T> => {
         const b = base(prev)
         return { ...b, messages: [...b.messages, value] }
       })
+
+      const type = (value as { type?: string } | null)?.type
+      const isFinished = type === "run_finished"
+      const isFailed = type === "run_failed"
+
+      if (closeOnFinish && (isFinished || isFailed)) {
+        eventSource.close()
+        setState((prev) => ({ ...base(prev), isConnected: false }))
+      }
     }
 
-    eventSource.addEventListener("done", () => {
-      eventSource.close()
-      setState((prev) => ({ ...base(prev), isConnected: false }))
-    })
-
     eventSource.addEventListener("ping", (event) => {
-      console.log("Ping received:", JSON.parse(event.data))
+      JSON.parse(event.data)
     })
 
     eventSource.onerror = (err) => {
-      console.error("SSE Error:", err)
-      setState((prev) => ({ ...base(prev), isConnected: false }))
-
-      eventSource.close()
+      console.error("❌ SSE Error:", err)
     }
 
     return () => {
       eventSource.close()
     }
-  }, [url])
+  }, [url, closeOnFinish])
 
-  return state.url === url
+  const isMatching = state.url === url
+
+  return isMatching
     ? { messages: state.messages, isConnected: state.isConnected }
     : { messages: [] as T[], isConnected: false }
 }

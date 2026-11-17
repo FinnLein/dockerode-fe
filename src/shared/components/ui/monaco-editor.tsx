@@ -1,6 +1,11 @@
 "use client"
 
-import Editor, { BeforeMount, OnChange } from "@monaco-editor/react"
+import Editor, {
+  BeforeMount,
+  type Monaco,
+  OnChange,
+  OnMount,
+} from "@monaco-editor/react"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 import { useMounted } from "../../hooks/useMounted"
@@ -49,6 +54,12 @@ const MonacoEditor = ({
     }
   }
 
+  const handleOnMount: OnMount = (editor, monaco: Monaco) => {
+    const model = editor.getModel()
+    model?.setEOL(monaco.editor.EndOfLineSequence.LF)
+    setIsEditorReady(true)
+  }
+
   const editorLanguage = language === "golang" ? "go" : language
 
   return (
@@ -66,7 +77,7 @@ const MonacoEditor = ({
           value={value}
           onChange={handleEditorChange}
           beforeMount={handleBeforeMount}
-          onMount={() => setIsEditorReady(true)}
+          onMount={handleOnMount}
           loading={<div />}
           height={height}
           width="100%"

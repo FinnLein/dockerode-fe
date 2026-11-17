@@ -1,8 +1,21 @@
-import { EvalDto, EvalResponseDto } from "@/generated/types"
+import {
+  EvalCollabDto,
+  EvalCollabResponseDto,
+  EvalDto,
+  EvalResponseDto,
+} from "@/generated/types"
 import { api } from "@/src/shared/lib/api"
 
-const evalTask = async (dto: EvalDto) => {
-  return api.post<EvalResponseDto>("eval", dto).then((res) => res.data)
+const evalTask = async (taskId: string, dto: EvalDto) => {
+  return api
+    .post<EvalResponseDto>(`eval/tasks/${taskId}`, dto)
+    .then((res) => res.data)
 }
 
-export { evalTask }
+const evalCollabTask = async (dto: EvalCollabDto) => {
+  return api
+    .post<EvalCollabResponseDto>("eval/collab", dto)
+    .then((res) => res.data)
+}
+
+export { evalCollabTask, evalTask }
