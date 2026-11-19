@@ -1,3 +1,5 @@
+"use client"
+
 import { Language } from "@/src/entities/tasks/model/types/tasks"
 import { CollabMonacoEditor } from "@/src/shared/components/ui/collab-monaco-editor"
 import { MonacoEditor } from "@/src/shared/components/ui/monaco-editor"
@@ -8,25 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/shared/components/ui/select/select"
-import { Session } from "../model/hooks/useCollabSession"
+import { TaskEditorProps } from "../model/types/TaskEditorProps"
 
-interface TaskEditorProps {
-  session: Session | null
-  code: string
-  setCode: (code: string) => void
-  language: Language[]
-  currentLang: Language
-  onLangChange: (lang: Language) => void
-}
+const TaskEditor = (props: TaskEditorProps) => {
+  const {
+    ytext,
+    awareness,
+    code,
+    setCode,
+    language,
+    currentLang,
+    onLangChange,
+  } = props
 
-export const TaskEditor = ({
-  session,
-  code,
-  setCode,
-  language,
-  currentLang,
-  onLangChange,
-}: TaskEditorProps) => {
   return (
     <>
       <Select
@@ -45,10 +41,10 @@ export const TaskEditor = ({
         </SelectContent>
       </Select>
 
-      {session ? (
+      {ytext ? (
         <CollabMonacoEditor
-          ytext={session.ytext}
-          awareness={session.awareness}
+          ytext={ytext}
+          awareness={awareness}
           language={currentLang}
           height="60vh"
         />
@@ -63,3 +59,5 @@ export const TaskEditor = ({
     </>
   )
 }
+
+export { TaskEditor }

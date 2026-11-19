@@ -1,3 +1,8 @@
 type Language = "javascript" | "golang" | "python"
 
-export type { Language }
+interface Code {
+  language: Language
+  template: string
+}
+
+export type { Code, Language }
