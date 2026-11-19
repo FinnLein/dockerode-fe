@@ -17,7 +17,6 @@ interface TaskDetailsCardProps {
   language: Language[]
   description: { html?: string } | unknown
   isProcessing: boolean
-  isPending: boolean
   messages: Array<{
     success: boolean
     stderr?: string
@@ -31,28 +30,29 @@ const TaskDetailsCard = ({
   language,
   description,
   isProcessing,
-  isPending,
   messages,
 }: TaskDetailsCardProps) => {
   const descriptionHtml = (description as { html?: string })?.html ?? ""
 
   return (
-    <Card className="w-full overflow-y-auto md:w-1/2">
-      <CardHeader className="flex flex-row flex-wrap items-center gap-2">
-        <CardTitle className="text-lg font-semibold transition-colors group-hover:text-primary">
-          Задача {title}
-        </CardTitle>
-        {language.map((lang) => (
-          <Badge key={lang} variant="secondary">
-            {lang}
-          </Badge>
-        ))}
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {descriptionHtml && <TiptapViewer content={descriptionHtml} />}
-        {isProcessing && <TaskProcessing isPending={isPending} />}
-        <TaskTestList messages={messages} />
-      </CardContent>
+    <Card className="p relative w-full md:w-1/2">
+      <div className="flex flex-col py-2 pl-2 md:absolute md:inset-0">
+        <CardHeader className="flex shrink-0 flex-row flex-wrap items-center gap-2">
+          <CardTitle className="text-lg font-semibold transition-colors group-hover:text-primary">
+            Задача {title}
+          </CardTitle>
+          {language.map((lang) => (
+            <Badge key={lang} variant="secondary">
+              {lang}
+            </Badge>
+          ))}
+        </CardHeader>
+        <CardContent className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
+          {descriptionHtml && <TiptapViewer content={descriptionHtml} />}
+          {isProcessing && <TaskProcessing isPending={isProcessing} />}
+          <TaskTestList messages={messages} />
+        </CardContent>
+      </div>
     </Card>
   )
 }

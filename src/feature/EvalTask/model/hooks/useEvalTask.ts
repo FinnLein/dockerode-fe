@@ -39,7 +39,6 @@ export const useEvalTask = ({ language, initialCode }: UseEvalTaskParams) => {
   }
 
   const setCodeDebug = (v: string) => {
-    console.log("SET_CODE:", JSON.stringify(v), new Error().stack)
     setCode(v)
   }
 

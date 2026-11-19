@@ -46,23 +46,22 @@ const TaskPage = ({ id }: TaskPageProps) => {
   if (isError || !task)
     return <Text variant="destructive">Ошибка или задача не найдена</Text>
 
-  const isLocalProcessing = localMutation.isPending || isLocalRunning
-  const isCollabProcessing = collabMutation.isPending || isCollabRunning
+  const isLocalProcessing = isLocalRunning
+  const isCollabProcessing = isCollabRunning
   const isProcessing = isCollab ? isCollabProcessing : isLocalProcessing
   const results = isCollab ? collabResults : localResults
 
   return (
-    <div className="flex flex-col gap-4 md:flex-row">
+    <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
       <TaskDetailsCard
         title={task.title}
         description={task.description}
         language={task.language}
         isProcessing={isProcessing}
-        isPending={isProcessing}
         messages={results}
       />
 
-      <div className="h-full w-full md:w-1/2">
+      <div className="w-full md:w-1/2">
         <EvalTask
           key={task.id}
           taskId={task.id}
