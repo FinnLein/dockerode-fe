@@ -1,21 +1,10 @@
 import { Button } from "@/src/shared/components/ui/button"
 import { Share, SquareArrowRightExit } from "lucide-react"
+import { CollabRoomControlsProps } from "../model/types/CollabRoomControlsProps"
 
-interface CollabRoomControlsProps {
-  roomId: string | null
-  isPending: boolean
-  onCreate: () => void
-  onLeave: () => void
-  onShare: () => void
-}
+export const CollabRoomControls = (props: CollabRoomControlsProps) => {
+  const { roomId, isPending, onCreate, onLeave, onShare } = props
 
-export const CollabRoomControls = ({
-  roomId,
-  isPending,
-  onCreate,
-  onLeave,
-  onShare,
-}: CollabRoomControlsProps) => {
   if (!roomId) {
     return (
       <Button

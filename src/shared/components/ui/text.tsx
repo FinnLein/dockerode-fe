@@ -21,6 +21,12 @@ const textVariants = cva("", {
       semibold: "font-semibold",
       bold: "font-bold",
     },
+    align: {
+      left: "text-left",
+      center: "text-center",
+      right: "text-right",
+      justify: "text-justify",
+    },
   },
   defaultVariants: {
     variant: "default",
@@ -55,6 +61,7 @@ const Text = React.forwardRef<HTMLElement, TextProps>(
       children,
       variant,
       weight,
+      align,
       htmlFor,
       ...props
     },
@@ -67,7 +74,7 @@ const Text = React.forwardRef<HTMLElement, TextProps>(
         ref={ref}
         className={cn(
           tagClasses[Component],
-          textVariants({ variant, weight }),
+          textVariants({ variant, weight, align }),
           className
         )}
         htmlFor={Component === "label" ? htmlFor : undefined}
