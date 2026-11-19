@@ -12,7 +12,7 @@ import { useMounted } from "../../hooks/useMounted"
 
 interface CollabMonacoEditorProps {
   ytext: Y.Text
-  awareness: Awareness
+  awareness: Awareness | null
   language: string
   height?: string | number
   readOnly?: boolean
