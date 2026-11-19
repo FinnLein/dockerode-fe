@@ -39,15 +39,15 @@ const TaskPage = ({ id }: TaskPageProps) => {
       if (!taskId) return
       localMutation.mutate({ taskId, dto })
     },
-    [taskId, localMutation.mutate],
+    [taskId, localMutation.mutate]
   )
 
-
   if (isLoading) return <Text>Загрузка...</Text>
-  if (isError || !task) return <Text variant="destructive">Ошибка или задача не найдена</Text>
+  if (isError || !task)
+    return <Text variant="destructive">Ошибка или задача не найдена</Text>
 
-  const isLocalProcessing = localMutation.isPending || isLocalRunning
-  const isCollabProcessing = collabMutation.isPending || isCollabRunning
+  const isLocalProcessing = isLocalRunning
+  const isCollabProcessing = isCollabRunning
   const isProcessing = isCollab ? isCollabProcessing : isLocalProcessing
   const results = isCollab ? collabResults : localResults
 

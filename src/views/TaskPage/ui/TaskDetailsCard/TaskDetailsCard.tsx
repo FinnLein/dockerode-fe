@@ -35,7 +35,7 @@ const TaskDetailsCard = ({
   const descriptionHtml = (description as { html?: string })?.html ?? ""
 
   return (
-    <Card className="relative w-full p md:w-1/2">
+    <Card className="p relative w-full md:w-1/2">
       <div className="flex flex-col py-2 pl-2 md:absolute md:inset-0">
         <CardHeader className="flex shrink-0 flex-row flex-wrap items-center gap-2">
           <CardTitle className="text-lg font-semibold transition-colors group-hover:text-primary">
