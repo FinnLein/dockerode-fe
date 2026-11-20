@@ -1,10 +1,12 @@
 "use client"
 
 import { LogIn, LogOut, Shield, User } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
 import { useAuth } from "@/src/feature/Auth/model/useAuth"
+import { useLogout } from "@/src/feature/Auth/model/useLogout"
 import { AuthModal } from "@/src/feature/Auth/ui/AuthModal"
 import { Button } from "@/src/shared/components/ui/button"
 import {
@@ -24,6 +26,7 @@ const UserMenu = () => {
   const { isAuth, isAdmin, user } = useAuth()
 
   const mounted = useMounted()
+  const { mutate: logout } = useLogout()
   const [authOpen, setAuthOpen] = useState(false)
 
   if (!mounted) {
@@ -41,18 +44,40 @@ const UserMenu = () => {
               title="Меню профиля"
               aria-label="Открыть меню профиля"
             >
-              <User />
+              {user?.avatarUrl ? (
+                <Image
+                  src={user.avatarUrl}
+                  alt={user.name ?? "Аватар пользователя"}
+                  width={28}
+                  height={28}
+                  className="size-7 rounded-full object-cover"
+                />
+              ) : (
+                <User />
+              )}
             </Button>
           }
         />
         <DropdownMenuContent className="min-w-50" align="end" sideOffset={8}>
           <DropdownMenuGroup>
             <DropdownMenuLabel className="flex items-center gap-2">
-              <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <User />
+              <div className="flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
+                {user?.avatarUrl ? (
+                  <Image
+                    src={user.avatarUrl}
+                    alt={user.name ?? "Аватар пользователя"}
+                    width={28}
+                    height={28}
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <User className="size-4" />
+                )}
               </div>
               <div className="flex flex-col">
-                <Text weight="medium">{isAuth ? user?.email : "Гость"}</Text>
+                <Text weight="medium">
+                  {isAuth ? (user?.email ?? user?.name) : "Гость"}
+                </Text>
               </div>
             </DropdownMenuLabel>
           </DropdownMenuGroup>
@@ -84,13 +109,7 @@ const UserMenu = () => {
           {isAuth && (
             <>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => {
-                  // логика выхода
-                  console.log("logout")
-                }}
-              >
+              <DropdownMenuItem variant="destructive" onClick={() => logout()}>
                 <LogOut />
                 Выйти
               </DropdownMenuItem>

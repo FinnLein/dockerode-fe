@@ -9,4 +9,8 @@ const login = async (dto: AuthorizeDto) => {
   return api.post<void>("auth/login", dto).then((res) => res.data)
 }
 
-export { login, register }
+const logout = async (): Promise<{ message: string }> => {
+  return api.post<{ message: string }>("auth/logout").then((res) => res.data)
+}
+
+export { login, logout, register }
