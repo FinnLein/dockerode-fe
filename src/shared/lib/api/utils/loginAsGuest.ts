@@ -1,4 +1,5 @@
-import { api, CustomAxiosRequestConfig } from "./api"
+import { api } from "../core/api"
+import { CustomAxiosRequestConfig } from "../types/CustomAxiosRequestConfig"
 
 const loginAsGuest = async () => {
   return api
