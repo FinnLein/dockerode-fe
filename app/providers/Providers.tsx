@@ -2,7 +2,7 @@
 
 import { ThemeProvider } from "@/src/shared/components/theme-provider"
 import { Toaster } from "@/src/shared/components/ui/toast"
-import { setGuestAuthSuccessHandler } from "@/src/shared/lib/api/api"
+import { setGuestAuthSuccessHandler } from "@/src/shared/lib/api"
 import { HocuspocusProviderWebsocket } from "@hocuspocus/provider"
 import { HocuspocusProviderWebsocketComponent } from "@hocuspocus/provider-react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"

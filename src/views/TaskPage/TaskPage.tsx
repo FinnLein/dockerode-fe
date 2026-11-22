@@ -1,6 +1,8 @@
 "use client"
 
 import { useTask } from "@/src/entities/tasks/model/hooks/useTask"
+import { useAuth } from "@/src/feature/Auth/model/useAuth"
+import { GuestAuthModal } from "@/src/feature/Auth/ui/GuestAuthModal"
 import { useEvalCollabTaskStream } from "@/src/feature/EvalTask/model/hooks/useEvalCollabTaskStream"
 import { useEvalTaskStream } from "@/src/feature/EvalTask/model/hooks/useEvalTaskStream"
 import { EvalTask } from "@/src/feature/EvalTask/ui/EvalTask"
@@ -17,6 +19,7 @@ const TaskPage = ({ id }: TaskPageProps) => {
   const searchParams = useSearchParams()
   const roomId = searchParams.get("roomId")
 
+  const { isAuth, isLoading: isAuthLoading } = useAuth()
   const { data: task, isLoading, isError } = useTask(id)
 
   const {
@@ -42,9 +45,15 @@ const TaskPage = ({ id }: TaskPageProps) => {
     [taskId, localMutation.mutate]
   )
 
-  if (isLoading) return <Text>Загрузка...</Text>
-  if (isError || !task)
+  if (isLoading || (isCollab && isAuthLoading)) {
+    return <Text>Загрузка...</Text>
+  }
+
+  if (isError || !task) {
     return <Text variant="destructive">Ошибка или задача не найдена</Text>
+  }
+
+  const shouldPromptGuest = isCollab && !isAuth
 
   const isLocalProcessing = isLocalRunning
   const isCollabProcessing = isCollabRunning
@@ -52,29 +61,39 @@ const TaskPage = ({ id }: TaskPageProps) => {
   const results = isCollab ? collabResults : localResults
 
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
-      <TaskDetailsCard
-        title={task.title}
-        description={task.description}
-        language={task.language}
-        isProcessing={isProcessing}
-        messages={results}
-      />
+    <>
+      <GuestAuthModal open={shouldPromptGuest} />
 
-      <div className="w-full md:w-1/2">
-        <EvalTask
-          key={task.id}
-          taskId={task.id}
+      <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
+        <TaskDetailsCard
+          title={task.title}
+          description={task.description}
           language={task.language}
-          initialCode={task.initialCode}
-          testCases={task.testCases}
-          onRun={handleRun}
-          isPending={localMutation.isPending}
-          onRunCollab={collabMutation.mutate}
-          isCollabRunning={isCollabProcessing}
+          isProcessing={isProcessing}
+          messages={results}
         />
+
+        <div className="w-full md:w-1/2">
+          {shouldPromptGuest ? (
+            <Text className="flex items-center justify-center md:h-[75vh]">
+              Авторизуйтесь, чтобы подключиться к комнате...
+            </Text>
+          ) : (
+            <EvalTask
+              key={task.id}
+              taskId={task.id}
+              language={task.language}
+              initialCode={task.initialCode}
+              testCases={task.testCases}
+              onRun={handleRun}
+              isPending={localMutation.isPending}
+              onRunCollab={collabMutation.mutate}
+              isCollabRunning={isCollabProcessing}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
