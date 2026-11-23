@@ -1,0 +1,37 @@
+.yRemoteSelection {
+  background-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+.yRemoteSelectionHead {
+  position: relative;
+  border: 1px solid var(--primary);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.yRemoteSelectionHead::before {
+  content: "";
+  position: absolute;
+  inset: -10px -180px -10px -10px;
+  z-index: 5;
+  background: transparent;
+}
+
+.yRemoteSelectionHead::after {
+  position: absolute;
+  top: -0.2em;
+  left: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--primary-foreground);
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  display: block;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.yRemoteSelectionHead:hover::after {
+  opacity: 0;
+}
