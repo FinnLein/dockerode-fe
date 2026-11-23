@@ -23,10 +23,16 @@ const TaskEditor = (props: TaskEditorProps) => {
     onLangChange,
   } = props
 
+  const languageLabels: Record<Language, string> = {
+    javascript: "JavaScript",
+    golang: "Golang",
+    python: "Python",
+  }
+
   return (
     <>
       <Select
-        value={currentLang}
+        value={languageLabels[currentLang]}
         onValueChange={(val) => onLangChange(val as Language)}
       >
         <SelectTrigger className="w-full">
@@ -35,7 +41,7 @@ const TaskEditor = (props: TaskEditorProps) => {
         <SelectContent>
           {language.map((lang) => (
             <SelectItem key={lang} value={lang}>
-              {lang}
+              {languageLabels[lang]}
             </SelectItem>
           ))}
         </SelectContent>
