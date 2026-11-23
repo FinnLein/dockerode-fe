@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
             hostname: "*.cloudpub.ru",
             protocol: "https",
           },
+          {
+            hostname: "*.dicebear.com",
+            protocol: "https",
+          },
         ],
   },
 }
