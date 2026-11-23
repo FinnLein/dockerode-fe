@@ -1,14 +1,16 @@
 "use client"
 
 import Editor, { BeforeMount, type Monaco, OnMount } from "@monaco-editor/react"
-import type { editor as MonacoEditorType } from "monaco-editor"
+import { type editor as MonacoEditorType } from "monaco-editor"
 import { useTheme } from "next-themes"
 import dynamic from "next/dynamic"
 import { useEffect, useRef, useState } from "react"
 import type { MonacoBinding } from "y-monaco"
 import { Awareness } from "y-protocols/awareness"
 import * as Y from "yjs"
-import { useMounted } from "../../hooks/useMounted"
+import { useMounted } from "../../../hooks/useMounted"
+import { useHideCursorOnLeave } from "./useHideCursorOnLeave"
+import { useMonacoCursors } from "./useMonacoCursors"
 
 interface CollabMonacoEditorProps {
   ytext: Y.Text
@@ -34,6 +36,9 @@ const EditorCore = ({
   const editorRef = useRef<MonacoEditorType.IStandaloneCodeEditor | null>(null)
   const modelRef = useRef<MonacoEditorType.ITextModel | null>(null)
   const bindingRef = useRef<MonacoBinding | null>(null)
+
+  useMonacoCursors(awareness)
+  useHideCursorOnLeave(editorRef, awareness)
 
   const handleBeforeMount: BeforeMount = (monaco) => {
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
@@ -114,6 +119,7 @@ const EditorCore = ({
             scrollBeyondLastLine: false,
             automaticLayout: true,
             tabSize: 2,
+            wordWrap: "on",
           }}
         />
       </div>
